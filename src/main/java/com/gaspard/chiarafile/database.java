@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 gaspard chiara
+ * Copyright (C) 2020 gaspard
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,12 +25,16 @@ import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.utils.Bytes;
+import com.gaspard.chiaradatabaselib.DatabaseAction;
+import com.gaspard.chiaradatabaselib.DatabaseConfiguration;
 import com.gaspard.chiarafile.data.chunkdata;
 import com.gaspard.chiarafile.you.ConfigurationChiara;
 import com.gaspard.chiarafile.you.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -78,8 +82,19 @@ public class database {
     public void close() {
         cluster.close();
     }
+public DatabaseConfiguration setdatabasechiaraconfig() throws UnknownHostException {
+DatabaseConfiguration config = new DatabaseConfiguration();
+ConfigurationChiara chiaraconfig = new ConfigurationChiara();
 
-    public int deletefilewithid(String idelete, String pass) {
+config.setUser(chiaraconfig.getUserchiaradatabase());
+config.setPassword(chiaraconfig.getPasswordchiaradatabase());
+
+ byte[] monipenbyte = new byte[]{0,0,0,0};
+        InetAddress monip = InetAddress.getByAddress(monipenbyte);
+config.setServerip(monip);
+return config;
+}
+    public int deletefilewithid(String idelete, String pass) throws IOException, ClassNotFoundException {
 
         ConfigurationChiara chiaraconfig = new ConfigurationChiara();
 
@@ -103,8 +118,13 @@ public class database {
             ));
 
             close();
-
+DatabaseConfiguration chiaradataconfig =      setdatabasechiaraconfig();
+       DatabaseAction action = new DatabaseAction();
+       action.deletefile(chiaradataconfig, idcast);
+          
+            
         } else {
+            System.out.println("pas de correspondance ou id = null");
             close();
             return 0;
         }
@@ -112,7 +132,7 @@ public class database {
         return 1;
     }
 
-    public File getfilewithidwithoutcreateco(String id) {
+    public File getfilewithidwithoutcreateco(String id) throws UnknownHostException, IOException, ClassNotFoundException {
 
         PreparedStatement statement = session
                 .prepare("SELECT * FROM chiara.files WHERE ID=?  ;");
@@ -138,14 +158,18 @@ public class database {
             end.type = d.getString("type");
             end.name = d.getString("name");
             end.delfile = d.getUUID("idelete");
-            end.file = d.getBytes("data");
+     
+            DatabaseConfiguration chiaradataconfig =      setdatabasechiaraconfig();
+  DatabaseAction action = new DatabaseAction();
+       byte[] datafile = action.getdata(chiaradataconfig, end.idfichier);
+        end.file = ByteBuffer.wrap(datafile);
         }
 
         return end;
 
     }
 
-    public File getfilewithid(String id) {
+    public File getfilewithid(String id) throws UnknownHostException, IOException, ClassNotFoundException {
         ConfigurationChiara chiaraconfig = new ConfigurationChiara();
 
         connectsecure(chiaraconfig.getip(), chiaraconfig.getuser(), chiaraconfig.getpass());
@@ -175,7 +199,10 @@ public class database {
             end.type = d.getString("type");
             end.name = d.getString("name");
             end.delfile = d.getUUID("idelete");
-            end.file = d.getBytes("data");
+            DatabaseConfiguration chiaradataconfig =      setdatabasechiaraconfig();
+       DatabaseAction action = new DatabaseAction();
+       byte[] datafile = action.getdata(chiaradataconfig, end.idfichier);
+        end.file = ByteBuffer.wrap(datafile);
         }
 
         close();
@@ -223,7 +250,7 @@ public class database {
         return end;
     }
 
-    public void parsefilereceive(database filestruct, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public void parsefilereceive(database filestruct, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, UnknownHostException, ClassNotFoundException {
         Part filePart = filestruct.file;
         String fileName = "";
         fileName = filePart.getSubmittedFileName();
@@ -235,7 +262,7 @@ public class database {
             return;
 
         }
-        if (size >= 320000000) {
+        if (size >= 100000000) {
 
             request.getRequestDispatcher("/WEB-INF/error.jsp").forward(request, response);
             return;
@@ -315,7 +342,7 @@ public class database {
 
     }
 
-    public File addrecordfile(database filestruct) throws IOException {
+    public File addrecordfile(database filestruct) throws IOException, UnknownHostException, ClassNotFoundException {
         chunkdata testchunk = new chunkdata();
 
         File end = new File();
@@ -336,8 +363,8 @@ public class database {
 
         PreparedStatement statement = session
                 .prepare("INSERT INTO chiara.files "
-                        + "(id, name, data,size,date,type,idelete) "
-                        + "VALUES (?, ?, ?,?,?,?,?);");
+                        + "(id, name,size,date,type,idelete) "
+                        + "VALUES (?, ?, ?,?,?,?);");
 
         BoundStatement boundStatement = new BoundStatement(statement);
         UUID fileid = UUID.randomUUID();
@@ -351,10 +378,15 @@ public class database {
         ResultSet res;
         res = session.execute(boundStatement.bind(
                 fileid,
-                filestruct.filename, blob, filestruct.size, todayAsString, filestruct.type, uuidel));
+                filestruct.filename, filestruct.size, todayAsString, filestruct.type, uuidel));
 // ajouter utilisateur
         if (res != null) {
             adduser(filestruct, fileid);
+            // ajoute fichier
+       DatabaseConfiguration chiaradataconfig =      setdatabasechiaraconfig();
+       DatabaseAction action = new DatabaseAction();
+     boolean check =   action.adddata(chiaradataconfig, filestruct.filename, fileid, b);
+      System.out.println(check);
         } else {
             close();
             end = null;
@@ -370,7 +402,7 @@ public class database {
                 + "= {'class':'SimpleStrategy', 'replication_factor':1};");
         session.execute("CREATE TABLE IF NOT EXISTS chiara.files ("
                 + "id uuid PRIMARY KEY," + "name text," + "size int,"
-                + "data blob," + "date text," + "type text," + "idelete uuid" + ");");
+                + "date text," + "type text," + "idelete uuid" + ");");
 
         session.execute("CREATE TABLE IF NOT EXISTS chiara.users ("
                 + "idfichier uuid PRIMARY KEY," + "ip text," + "useragent text,"

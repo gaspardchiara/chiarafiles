@@ -3,7 +3,7 @@
     Created on : 6 mai 2020, 22:16:22
     Author     : gaspard
 /*
- * Copyright (C) 2020 gaspard chiara
+ * Copyright (C) 2020 gaspard
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,25 +33,18 @@
     </head>
      <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="/">Chiarafiles  </a>
-  <a class="navbar-brand">Source code</a>
+  <a class="navbar-brand" href="https://github.com/gaspardchiara/chiarafiles">Source code</a>
   <a class="navbar-brand" href="/contrat.jsp"> License </a>
   <a class="navbar-brand" href="/about.jsp">About</a>
 
      </nav>
     <body>
         <main role="main" class="flex-shrink-0">
-            <p>Chiarafiles is created to let you upload at max 32mb per files. Is an opensource software released under the GNU GPL3 you consult the license here : https://www.gnu.org/licenses/gpl-3.0.en.html</p>
-            <p>You can use for example I you want ot send word file to a person. You can use it when you don't have for example usb key to transfer data.</p>
-            <p>Chiarafile is an opensource alternative to Wetransfer and another proprietary  web services files sharing</p>
-            <p>I have made this program for my personnal utilisation, I study  law and when I send my dissertation to my college teacher I don't wan to use proprietary software.</p>
-            <p>If you are in the same situation of me is a perfect case when You can use my web software.</p>
-            <p>This program is a experimentation of store large blobs in cassandra database. And try to look how cassandra manage this type of data in production. </p>          
-            <p>Please if you contribute try to contribute to add :</p>
-            <p>Rijndael algorithm for encrypt data in database</p>
-            <p>And increase the limit size, and try to store the files superior to 40mb to openstack swift  </p>
-            <p>Wou will see, the jsp html code is very simple.</p>
-            <p>Thanks to taking interest of this software !</p>
-            <p>Please to abuse of the service I self host it</p>
+            <p>Chiarafiles is an opensource project writed by gaspard chiara.</p>
+            <p>This opensource allow you to upload file, I have created chiarafiles to experiment my database for blob.</p>
+            <p>When your upload a file in chiara,the file will be store in my database system called : chiaradatabase. </p>
+            <p>I have maade chiarafiles for testing my database system at large deployment.</p>
+                   <p>You can contribute to my project, I will accept your contribution with pleasure !</p> 
         </main>
        
     </body>

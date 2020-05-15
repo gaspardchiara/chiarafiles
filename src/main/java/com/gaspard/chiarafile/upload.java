@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 gaspard chiara
+ * Copyright (C) 2020 gaspard
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,9 @@ package com.gaspard.chiarafile;
 import com.gaspard.chiarafile.data.chunkdata;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
@@ -47,7 +50,7 @@ public class upload extends HttpServlet {
 
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, UnknownHostException, ClassNotFoundException {
         response.setContentType("text/html;charset=UTF-8");
          database gaspard = new database ();
 gaspard.ip = request.getRemoteAddr() ;
@@ -70,8 +73,12 @@ gaspard.parsefilereceive(gaspard, request, response);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
+            throws ServletException, IOException, UnknownHostException {
+        try {
+            processRequest(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(upload.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -84,13 +91,15 @@ gaspard.parsefilereceive(gaspard, request, response);
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, UnknownHostException {
            try {
         processRequest(request, response);
     } catch (IllegalArgumentException e) {
     request.getRequestDispatcher("/WEB-INF/error.jsp").forward(request, response);
 return;
-    }
+    }   catch (ClassNotFoundException ex) {
+            Logger.getLogger(upload.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

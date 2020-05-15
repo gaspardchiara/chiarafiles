@@ -3,7 +3,7 @@
     Created on : 6 mai 2020, 22:16:13
     Author     : gaspard
 /*
- * Copyright (C) 2020 gaspard chiara
+ * Copyright (C) 2020 gaspard
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,7 +45,8 @@
             <p>Don't upload files when you don't have power to do so. </p>
             <p>Don't try to disturb the normal functionnement of this web service. </p>
             <p>The system record your user agent and your ip adress during max 60 days when you upload a file to the service. </p>
-<</main>
+		<p>The max upload limit is 100 mb, that mean you can't upload  </p>
+</main>
        
     </body>
 </html>

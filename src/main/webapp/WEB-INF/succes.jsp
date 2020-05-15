@@ -3,7 +3,7 @@
     Created on : 5 mai 2020, 13:20:39
     Author     : gaspard
 /*
- * Copyright (C) 2020 gaspard chiara
+ * Copyright (C) 2020 gaspard
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 gaspard chiara
+ * Copyright (C) 2020 gaspard
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,9 +21,12 @@ import com.gaspard.chiarafile.you.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.UnknownHostException;
 import java.nio.channels.Channels;
 import java.nio.channels.WritableByteChannel;
 import static java.util.Arrays.stream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -46,7 +49,7 @@ public class downloadfile extends HttpServlet {
      */
     // this class download the file to the client
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, UnknownHostException, ClassNotFoundException {
         response.setContentType("text/html;charset=UTF-8");
         String id = request.getParameter("id");
                 if (id.length() >= 2 && id.length() <= 50 ) { 
@@ -95,8 +98,12 @@ fileout.close();
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
+            throws ServletException, IOException, UnknownHostException {
+        try {
+            processRequest(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(downloadfile.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -109,8 +116,12 @@ fileout.close();
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
+            throws ServletException, IOException, UnknownHostException {
+        try {
+            processRequest(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(downloadfile.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

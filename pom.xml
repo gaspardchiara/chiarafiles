@@ -4,7 +4,7 @@
 
     <groupId>com.gaspard</groupId>
     <artifactId>chiarafile</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0-RELEASE</version>
     <packaging>war</packaging>
 
     <name>chiarafile</name>
@@ -13,7 +13,14 @@
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    
+
+	
+<repositories>
+    <repository>
+        <id>maven-repository</id>
+        <url>file://${user.home}/.m2/repository/</url>
+    </repository>
+</repositories>
     <dependencies>
         <dependency>
             <groupId>javax</groupId>
@@ -31,7 +38,11 @@
     <artifactId>cassandra-unit</artifactId>
     <version>3.0.0.1</version>
 </dependency>
-       
+       <dependency>
+    <groupId>com.gaspard</groupId>
+    <artifactId>chiaradatabaselib</artifactId>
+    <version>1.0-RELEASE</version>
+</dependency>
 <dependency>
     <groupId>commons-codec</groupId>
     <artifactId>commons-codec</artifactId>

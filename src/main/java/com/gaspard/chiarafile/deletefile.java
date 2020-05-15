@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 gaspard chiara
+ * Copyright (C) 2020 gaspard
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,8 @@ package com.gaspard.chiarafile;
 import com.gaspard.chiarafile.you.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +42,7 @@ public class deletefile extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, ClassNotFoundException {
         response.setContentType("text/html;charset=UTF-8");
        
            String id = request.getParameter("id");
@@ -68,6 +70,7 @@ return;
                     
                     
                 } else {
+                System.out.println("pas supprime");
         response.sendRedirect("/");
                 
                 
@@ -88,7 +91,11 @@ return;
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(deletefile.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -102,7 +109,11 @@ return;
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(deletefile.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
